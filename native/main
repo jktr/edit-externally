@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+import json
+import os
+import struct
+import subprocess
+import sys
+import tempfile
+
+length = sys.stdin.buffer.read(4)
+if not length:
+    sys.exit(1)
+length = struct.unpack('=I', length)[0]
+msg = sys.stdin.buffer.read(length)
+req = json.loads(msg)
+
+with tempfile.NamedTemporaryFile(mode='w+', suffix='.txt') as f:
+    f.write(req)
+    f.seek(0)
+
+    editor = os.environ.get('VISUAL', os.environ.get('EDITOR', 'nano'))
+    terminal = os.environ.get('TERMINAL', 'xterm')
+    subprocess.run([terminal, '-e', editor, f.name])
+
+    resp = f.read()
+
+msg = json.dumps(resp).encode('utf-8')
+length = struct.pack('=I', len(msg))
+sys.stdout.buffer.write(length)
+sys.stdout.buffer.write(msg)
+sys.stdout.buffer.flush()

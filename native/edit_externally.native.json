@@ -1,0 +1,6 @@
+{ "name": "edit_externally.native"
+, "description": "Native component that wraps an external editor."
+, "type": "stdio"
+, "path": "/absolute/path/to/main/script"
+, "allowed_extensions": [ "edit-externally@0x16.de" ]
+}

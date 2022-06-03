@@ -1,0 +1,25 @@
+{ "manifest_version": 2
+, "browser_specific_settings":
+  { "gecko": { "id": "edit-externally@0x16.de" }
+  }
+, "name": "edit-externally"
+, "version": "1.0"
+, "description": "Edit the content of text fields with an external editor."
+, "homepage_url": "https://github.com/jktr/edit-externally"
+, "permissions":
+  [ "menus"
+  , "nativeMessaging"
+  ]
+, "content_scripts":
+  [ { "matches":
+      [ "https://*/*"
+      , "http://*/*"
+      , "file:///*" ]
+    , "js": [ "content.js" ]
+    }
+  ]
+, "background":
+  { "scripts": [ "main.js" ]
+  , "persistent": false
+  }
+}
