@@ -4,17 +4,12 @@ browser.menus.create({
   id: 'edit-externally',
 })
 
-browser.menus.onClicked.addListener((info, tab) => {
+function edit(elementId, tabId) {
+  console.debug('targeting:', elementId)
 
-  console.debug('targeting:', info.targetElementId)
-
-  if (info.menuItemId != 'edit-externally' || !info.editable) {
-    return
-  }
-
-  browser.tabs.sendMessage(tab.id, {
+  browser.tabs.sendMessage(tabId, {
     type: 'get',
-    elem: info.targetElementId,
+    elem: elementId,
   }).then((v) => {
 
     console.debug('fetched:', v)
@@ -25,9 +20,9 @@ browser.menus.onClicked.addListener((info, tab) => {
 
       console.debug('updating to:', v)
 
-      browser.tabs.sendMessage(tab.id, {
+      browser.tabs.sendMessage(tabId, {
         type: 'set',
-        elem: info.targetElementId,
+        elem: elementId,
         text: v,
       }).catch((err) => {
         console.error('err', err)
@@ -43,4 +38,28 @@ browser.menus.onClicked.addListener((info, tab) => {
     console.error('err', err)
     return false
   })
+}
+
+browser.commands.onCommand.addListener((cmd) => {
+  console.debug('cmd', cmd)
+
+  if (cmd != 'edit-externally') {
+    return
+  }
+
+  browser.tabs.query({
+    active: true,
+    currentWindow: true,
+  }).then((tabs) => edit('active', tabs[0].id))
+    .catch((err) => consol.error(e))
+})
+
+browser.menus.onClicked.addListener((info, tab) => {
+  console.debug('menu', info.targetElementId)
+
+  if (info.menuItemId != 'edit-externally' || !info.editable) {
+    return
+  }
+
+  edit(info.targetElementId, tab.id)
 })

@@ -3,7 +3,16 @@ browser.runtime.onMessage.addListener((data, sender) => {
     return false
   }
 
-  let e = browser.menus.getTargetElement(data.elem)
+  if (data.elem == 'active') {
+    var e = document.activeElement
+  } else {
+    var e = browser.menus.getTargetElement(data.elem)
+  }
+
+  if (e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') {
+    console.error('rpc: no text input element found')
+    return false
+  }
 
   switch (data.type) {
     case 'get':

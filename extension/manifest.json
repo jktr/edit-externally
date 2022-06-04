@@ -22,4 +22,10 @@
   { "scripts": [ "main.js" ]
   , "persistent": false
   }
+, "commands":
+  { "edit-externally":
+    { "suggested_key": { "default": "Alt+Shift+U" }
+    , "description": "Open the current text field in an external editor."
+    }
+  }
 }
